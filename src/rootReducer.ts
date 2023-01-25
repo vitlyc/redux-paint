@@ -2,9 +2,8 @@ import { Action, UPDATE_STROKE, BEGIN_STROKE, END_STROKE } from "./actions"
 import { RootState } from "./types"
 
 const initialState: RootState = {
-  currentStroke: { points: [], color: "#000" },
+  currentStroke: { points: [], color: "green" },
   strokes: [],
-  historyIndex: 0,
 }
 
 export const rootReducer = (state: RootState = initialState, action: Action) => {
@@ -31,11 +30,13 @@ export const rootReducer = (state: RootState = initialState, action: Action) => 
       if (!state.currentStroke.points.length) {
         return state
       }
-      return {
+      const newState = {
         ...state,
+        historyIndex: 0,
         currentStroke: { ...state.currentStroke, points: [] },
         strokes: [...state.strokes, state.currentStroke],
       }
+      return newState
     }
     default:
       return state
