@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useRef } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import { currentStrokeSelector } from "./selectors"
+import { beginStroke, endStroke, updateStroke } from "./actions"
 
 function App() {
+  const dispatch = useDispatch()
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const currentStroke = useSelector(currentStrokeSelector)
+
+  const startDrawing = ({ nativeEvent }: React.MouseEvent<HTMLCanvasElement>) => {
+    const { offsetX, offsetY } = nativeEvent
+    dispatch(beginStroke(offsetX, offsetY))
+  }
+
+  const endDrawing = () => {}
+  const draw = ({ nativeEvent }: React.MouseEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) {
+      return
+    }
+    const { offsetX, offsetY } = nativeEvent
+    dispatch(updateStroke(offsetX, offsetY))
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <canvas
+      onMouseDown={startDrawing}
+      onMouseUp={endDrawing}
+      onMouseOut={endDrawing}
+      onMouseMove={draw}
+      ref={canvasRef}
+    />
+  )
 }
 
-export default App;
+export default App
