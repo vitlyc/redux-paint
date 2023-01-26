@@ -1,6 +1,6 @@
 import React from "react"
 import { useDispatch } from "react-redux"
-import { setStrokeColor } from "./actions"
+import { setStrokeColor } from "../actions"
 
 const COLORS = [
   "#000000",
@@ -30,7 +30,7 @@ const COLORS = [
   "#8000ff",
   "#ff0080",
   "#804000",
-  "#ff8040",
+  "#ff8040"
 ]
 
 export const ColorPanel = () => {
