@@ -1,20 +1,29 @@
-import { Action, UPDATE_STROKE, BEGIN_STROKE, END_STROKE } from "./actions"
+import {
+  Action,
+  UPDATE_STROKE,
+  BEGIN_STROKE,
+  END_STROKE,
+  SET_STROKE_COLOR
+} from "./actions"
 import { RootState } from "./types"
 
 const initialState: RootState = {
-  currentStroke: { points: [], color: "green" },
-  strokes: [],
+  currentStroke: { points: [], color: "#000" },
+  strokes: []
 }
 
-export const rootReducer = (state: RootState = initialState, action: Action) => {
+export const rootReducer = (
+  state: RootState = initialState,
+  action: Action
+) => {
   switch (action.type) {
     case BEGIN_STROKE: {
       return {
         ...state,
         currentStroke: {
           ...state.currentStroke,
-          points: [action.payload],
-        },
+          points: [action.payload]
+        }
       }
     }
     case UPDATE_STROKE: {
@@ -22,8 +31,17 @@ export const rootReducer = (state: RootState = initialState, action: Action) => 
         ...state,
         currentStroke: {
           ...state.currentStroke,
-          points: [...state.currentStroke.points, action.payload],
-        },
+          points: [...state.currentStroke.points, action.payload]
+        }
+      }
+    }
+    case SET_STROKE_COLOR: {
+      return {
+        ...state,
+        currentStroke: {
+          ...state.currentStroke,
+          ...{ color: action.payload }
+        }
       }
     }
     case END_STROKE: {
@@ -34,7 +52,7 @@ export const rootReducer = (state: RootState = initialState, action: Action) => 
         ...state,
         historyIndex: 0,
         currentStroke: { ...state.currentStroke, points: [] },
-        strokes: [...state.strokes, state.currentStroke],
+        strokes: [...state.strokes, state.currentStroke]
       }
       return newState
     }
