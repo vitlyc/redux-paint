@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit"
-import { Stroke, Point } from "./utils/types"
+import { Stroke, Point } from "../../utils/types"
 
 export const beginStroke = createAction<Point>("BEGIN_STROKE")
 
@@ -11,7 +11,3 @@ export const endStroke = createAction<{
   stroke: Stroke
   historyIndex: number
 }>("endStroke")
-
-export const undo = createAction<number>("UNDO")
-
-export const redo = createAction("REDO")

@@ -1,15 +1,15 @@
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { beginStroke, endStroke, updateStroke } from "./actions"
-import { RootState } from "./types"
-import { drawStroke, clearCanvas, setCanvasSize } from "./canvasUtils"
-import { EditPanel } from "./shared/EditPanel"
-import { ColorPanel } from "./shared/ColorPanel"
-import { currentStrokeSelector } from "./modules/currentStroke/selectors"
 import { strokesSelector } from "./modules/strokes/selectors"
 import { historyIndexSelector } from "./modules/historyIndex/selectors"
 import { FilePanel } from "./shared/FilePanel"
 import { useCanvas } from "./CanvasContext"
+import { ColorPanel } from "./shared/ColorPanel"
+import { RootState } from "./utils/types"
+import { currentStrokeSelector } from "./modules/currentStroke/selectors"
+import { drawStroke, clearCanvas, setCanvasSize } from "./utils/canvasUtils"
+import { EditPanel } from "./shared/EditPanel"
 
 const WIDTH = 1024
 const HEIGHT = 768
@@ -20,17 +20,15 @@ function App() {
   const isDrawing = useSelector<RootState>(
     (state) => !!state.currentStroke.points.length
   )
-  const historyIndex = useSelector<
-    RootState,
-    RootState["historyIndex"]
-  >(historyIndexSelector)
+  const historyIndex = useSelector<RootState, RootState["historyIndex"]>(
+    historyIndexSelector
+  )
   const strokes = useSelector<RootState, RootState["strokes"]>(
     strokesSelector
   )
-  const currentStroke = useSelector<
-    RootState,
-    RootState["currentStroke"]
-  >(currentStrokeSelector)
+  const currentStroke = useSelector<RootState, RootState["currentStroke"]>(
+    currentStrokeSelector
+  )
   const getCanvasWithContext = (canvas = canvasRef.current) => {
     return { canvas, context: canvas?.getContext("2d") }
   }
@@ -39,7 +37,7 @@ function App() {
     nativeEvent
   }: React.MouseEvent<HTMLCanvasElement>) => {
     const { offsetX, offsetY } = nativeEvent
-    dispatch(beginStroke(offsetX, offsetY))
+    dispatch(beginStroke({x: offsetX, y: offsetY}))
   }
 
   useEffect(() => {
@@ -53,20 +51,18 @@ function App() {
   }, [currentStroke])
 
   const endDrawing = () => {
-    if (isDrawing) {
-      dispatch(endStroke(historyIndex, currentStroke))
+    if (isDrawing){
+      dispatch(endStroke({historyIndex, stroke: currentStroke}))
     }
   }
 
-  const draw = ({
-    nativeEvent
-  }: React.MouseEvent<HTMLCanvasElement>) => {
+  const draw = ({ nativeEvent }: React.MouseEvent<HTMLCanvasElement>) => {
     if (!isDrawing) {
       return
     }
     const { offsetX, offsetY } = nativeEvent
 
-    dispatch(updateStroke(offsetX, offsetY))
+    dispatch(updateStroke({x: offsetX, y: offsetY}))
   }
 
   useEffect(() => {
@@ -77,11 +73,9 @@ function App() {
     requestAnimationFrame(() => {
       clearCanvas(canvas)
 
-      strokes
-        .slice(0, strokes.length - historyIndex)
-        .forEach((stroke) => {
-          drawStroke(context, stroke.points, stroke.color)
-        })
+      strokes.slice(0, strokes.length - historyIndex).forEach((stroke) => {
+        drawStroke(context, stroke.points, stroke.color)
+      })
     })
   }, [historyIndex])
 
@@ -106,12 +100,14 @@ function App() {
       <div className="title-bar">
         <div className="title-bar-text">Redux Paint</div>
         <div className="title-bar-controls">
-          <button aria-label="Close" />
+          <button
+            aria-label="Close"
+          />
         </div>
       </div>
-      <EditPanel />
-      <ColorPanel />
-      <FilePanel />
+      <EditPanel/>
+      <FilePanel/>
+      <ColorPanel/>
       <canvas
         onMouseDown={startDrawing}
         onMouseUp={endDrawing}

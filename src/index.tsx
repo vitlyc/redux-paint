@@ -5,11 +5,14 @@ import App from "./App"
 import * as serviceWorker from "./serviceWorker"
 import { store } from "./store"
 import { Provider } from "react-redux"
+import { CanvasProvider } from "./CanvasContext"
 
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <CanvasProvider>
+        <App />
+      </CanvasProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")
