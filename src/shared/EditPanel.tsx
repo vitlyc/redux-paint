@@ -1,7 +1,7 @@
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { undo, redo } from "../actions"
 import { strokesLengthSelector } from "../modules/strokes/selectors"
+import { undo, redo } from "../modules/historyIndex/slice"
 
 export const EditPanel = () => {
   const dispatch = useDispatch()
