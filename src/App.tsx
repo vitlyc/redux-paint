@@ -11,12 +11,14 @@ import {
   updateStroke,
 } from "./modules/currentStroke/slice"
 import { endStroke } from "./modules/sharedActions"
+import { ModalLayer } from "./ModalLayer"
 import { useCanvas } from "./CanvasContext"
 import { ColorPanel } from "./shared/ColorPanel"
 import { FilePanel } from "./shared/FilePanel"
-import { currentStrokeSelector } from "./modules/currentStroke/selectors"
-import { strokesSelector } from "./modules/strokes/selectors"
+import { RootState } from "./utils/types"
 import { historyIndexSelector } from "./modules/historyIndex/selectors"
+import { strokesSelector } from "./modules/strokes/selectors"
+import { currentStrokeSelector } from "./modules/currentStroke/selectors"
 
 const WIDTH = 1024
 const HEIGHT = 768
@@ -24,9 +26,9 @@ const HEIGHT = 768
 function App() {
   const dispatch = useDispatch()
   const canvasRef = useCanvas()
-  const historyIndex = useSelector(historyIndexSelector)
-  const strokes = useSelector(strokesSelector)
-  const currentStroke = useSelector(currentStrokeSelector)
+  const historyIndex = useSelector<RootState, RootState["historyIndex"]>(historyIndexSelector)
+  const strokes = useSelector<RootState, RootState["strokes"]>(strokesSelector)
+  const currentStroke = useSelector<RootState, RootState["currentStroke"]>(currentStrokeSelector)
   const isDrawing = !!currentStroke.points.length
 
   const getCanvasWithContext = (canvas = canvasRef.current) => {
@@ -112,6 +114,7 @@ function App() {
       <ColorPanel/>
       <EditPanel />
       <FilePanel />
+      <ModalLayer />
       <canvas
         onMouseDown={startDrawing}
         onMouseUp={endDrawing}

@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { RootState } from "../../utils/types"
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { RootState, Stroke } from "../../utils/types"
 import { endStroke } from "../sharedActions"
 
 const initialStrokes: RootState["strokes"] = []
@@ -7,7 +7,11 @@ const initialStrokes: RootState["strokes"] = []
 const strokes = createSlice({
   name: "strokes",
   initialState: initialStrokes,
-  reducers: {},
+  reducers: {
+    setStrokes: (state, action: PayloadAction<Stroke[]>) => {
+      return action.payload
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(endStroke, (state, action) => {
       const { historyIndex, stroke } = action.payload
@@ -19,5 +23,7 @@ const strokes = createSlice({
     })
   }
 })
+
+export const { setStrokes } = strokes.actions
 
 export default strokes.reducer

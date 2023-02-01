@@ -1,3 +1,4 @@
-import { RootState } from "../../utils/types";
+import { RootState } from "../../utils/types"
 
-export const historyIndexSelector = (state:RootState) => state.historyIndex
+export const historyIndexSelector = (state: RootState) =>
+  state.historyIndex

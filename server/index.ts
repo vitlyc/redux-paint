@@ -40,7 +40,7 @@ app.use(bodyParser.json())
 
 const port = 4000
 
-app.get("/projects", (req, res) => {
+app.get("/projects", (req: any, res: any) => {
   const data = db.get("projects").value()
   const projects = data.map((project) => ({
     name: project.name,
@@ -50,14 +50,14 @@ app.get("/projects", (req, res) => {
   return res.json(projects)
 })
 
-app.post("/projects/new", (req, res) => {
+app.post("/projects/new", (req: any, res: any) => {
   db.get("projects")
     .push({ ...req.body, id: nanoid() })
     .write()
   res.json({ success: true })
 })
 
-app.get("/projects/:projectId", (req, res) => {
+app.get("/projects/:projectId", (req: any, res: any) => {
   const { projectId } = req.params
   const project = db.get("projects").find({ id: projectId }).value()
 
